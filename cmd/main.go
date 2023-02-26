@@ -14,5 +14,6 @@ func main() {
 
 	routes.RegisterBookStoreRoutesfunc(r)
 	http.Handle("/", r)
+	log.Println("Listening...")
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", config.GetServerPort()), r))
 }

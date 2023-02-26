@@ -20,7 +20,7 @@ func Insert(book Book) (id int64, err error) {
 
 	defer conn.Close()
 
-	sql := `INSERT INTO Books (Name, Author, Publication) VALUES ($1, $2, $3) RETURNING id`
+	sql := `INSERT INTO books (Name, Author, Publication) VALUES ($1, $2, $3) RETURNING id`
 
 	err = conn.QueryRow(sql, book.Name, book.Author, book.Publication).Scan(&id)
 
@@ -36,7 +36,7 @@ func Get(id int64) (book Book, err error) {
 
 	defer conn.Close()
 
-	row := conn.QueryRow(`SELECT * FROM Book WHERE id=$1`, id)
+	row := conn.QueryRow(`SELECT * FROM books WHERE id=$1`, id)
 
 	err = row.Scan(&book.Id, &book.Name, &book.Author, &book.Publication)
 
@@ -52,7 +52,7 @@ func GetAll() (books []Book, err error) {
 
 	defer conn.Close()
 
-	rows, err := conn.Query(`SELECT * FROM Book`)
+	rows, err := conn.Query(`SELECT * FROM books`)
 
 	if err != nil {
 		return
@@ -80,7 +80,7 @@ func Update(id int64, book Book) (int64, error) {
 
 	defer conn.Close()
 
-	res, err := conn.Exec(`UPDATE book SET Name=$2, Author=$3, Publication=$4 WHERE Id=$1`, id, book.Name, book.Author, book.Publication)
+	res, err := conn.Exec(`UPDATE books SET Name=$2, Author=$3, Publication=$4 WHERE Id=$1`, id, book.Name, book.Author, book.Publication)
 
 	if err != nil {
 		return 0, err
@@ -98,7 +98,7 @@ func Delete(id int64) (int64, error) {
 
 	defer conn.Close()
 
-	res, err := conn.Exec(`DELETE FROM Book WHERE Id=$1`, id)
+	res, err := conn.Exec(`DELETE FROM books WHERE Id=$1`, id)
 
 	if err != nil {
 		return 0, err
