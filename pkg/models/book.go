@@ -9,13 +9,7 @@ type Book struct {
 	Name        string `json:"title"`
 	Author      string `json:"author"`
 	Publication string `json:"publication"`
-	// createdAt time.Time `json:"createdAt"`
 }
-
-// func init() {
-// 	config.Connect()
-// 	db = config.GetDB()
-// }
 
 func Insert(book Book) (id int64, err error) {
 	conn, err := config.Connect()
