@@ -1,23 +1,23 @@
 package controllers
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/go-chi/chi/v5"
+	"github.com/gin-gonic/gin"
 	"github.com/maksonviini/Go-Book-Management-System/pkg/models"
 	"log"
 	"net/http"
 	"strconv"
 )
 
-func Create(w http.ResponseWriter, r *http.Request) {
+func Create(c *gin.Context) {
+
 	var book models.Book
 
-	err := json.NewDecoder(r.Body).Decode(&book)
+	err := c.ShouldBindJSON(&book)
 
 	if err != nil {
 		log.Printf("Erro ao fazer decode do json: %v", err)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": http.StatusInternalServerError})
 		return
 	}
 
@@ -37,28 +37,30 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	w.Header().Add("Content-Type", "application/json")
-
-	json.NewEncoder(w).Encode(resp)
+	c.JSON(http.StatusOK, gin.H{
+		"message": resp,
+	  })
 
 }
 
-func Update(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+func Update(c *gin.Context) {
+
+	id, err := strconv.Atoi(c.Param("id"))
+
 
 	if err != nil {
 		log.Printf("Erro ao fazer parse do id: %v", err)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": http.StatusInternalServerError})
 		return
 	}
 
 	var book models.Book
 
-	err = json.NewDecoder(r.Body).Decode(&book)
+	err = c.ShouldBindJSON(&book)
 
 	if err != nil {
 		log.Printf("Erro ao fazer decode do json: %v", err)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": http.StatusInternalServerError})
 		return
 	}
 
@@ -68,7 +70,7 @@ func Update(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Printf("Erro ao atualizar registro: %v", err)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": http.StatusInternalServerError})
 		return
 	}
 
@@ -81,17 +83,17 @@ func Update(w http.ResponseWriter, r *http.Request) {
 		"Message": "Dados atualizados com sucesso!",
 	}
 
-	w.Header().Add("Content-Type", "application/json")
-
-	json.NewEncoder(w).Encode(resp)
+	c.JSON(http.StatusOK, gin.H{
+		"message": resp,
+	  })
 }
 
-func Delete(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+func Delete(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
 
 	if err != nil {
 		log.Printf("Erro ao fazer parse do id: %v", err)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": http.StatusInternalServerError})
 		return
 	}
 
@@ -101,7 +103,7 @@ func Delete(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Printf("Erro ao remover registro: %v", err)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": http.StatusInternalServerError})
 		return
 	}
 
@@ -114,30 +116,32 @@ func Delete(w http.ResponseWriter, r *http.Request) {
 		"Message": "Dados removidos com sucesso!",
 	}
 
-	w.Header().Add("Content-Type", "application/json")
-
-	json.NewEncoder(w).Encode(resp)
+	c.JSON(http.StatusOK, gin.H{
+		"message": resp,
+	  })
 }
 
-func GetAll(w http.ResponseWriter, r *http.Request) {
+func GetAll(c *gin.Context) {
 	book, err := models.GetAll()
 
 	if err != nil {
 		log.Printf("Erro ao obter registros: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": http.StatusInternalServerError})
 		return
 	}
 
-	w.Header().Add("Content-Type", "application/json")
-
-	json.NewEncoder(w).Encode(book)
+    c.JSON(http.StatusOK, gin.H{
+		"message": book,
+	  })
 }
 
-func Get(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+func Get(c *gin.Context) {
+
+	id, err := strconv.Atoi(c.Param("id"))
 
 	if err != nil {
 		log.Printf("Erro ao fazer parse do id: %v", err)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": http.StatusInternalServerError})
 		return
 	}
 
@@ -145,11 +149,11 @@ func Get(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Printf("Erro ao obter registro: %v", err)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": http.StatusInternalServerError})
 		return
 	}
 
-	w.Header().Add("Content-Type", "application/json")
-
-	json.NewEncoder(w).Encode(book)
+	c.JSON(http.StatusOK, gin.H{
+		"message": book,
+	  })
 }

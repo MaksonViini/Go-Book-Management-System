@@ -2,18 +2,22 @@ package main
 
 import (
 	"fmt"
-	"github.com/go-chi/chi/v5"
-	"github.com/maksonviini/Go-Book-Management-System/pkg/config"
-	"github.com/maksonviini/Go-Book-Management-System/pkg/routes"
 	"log"
 	"net/http"
+	"github.com/gin-gonic/gin"
+	"github.com/maksonviini/Go-Book-Management-System/pkg/config"
+	"github.com/maksonviini/Go-Book-Management-System/pkg/routes"
 )
 
 func main() {
-	r := chi.NewRouter()
+	router := gin.Default()
 
-	routes.RegisterBookStoreRoutesfunc(r)
-	http.Handle("/", r)
+	routes.RegisterBookStoreRoutesfunc(&router.RouterGroup)
+
+	http.Handle("/", router)
 	log.Println("Listening...")
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", config.GetServerPort()), r))
+
+	if err := router.Run(fmt.Sprintf(":%s", config.GetServerPort())); err != nil {
+		log.Fatal(err)
+	}
 }

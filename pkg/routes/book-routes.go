@@ -1,22 +1,23 @@
 package routes
 
 import (
-	"github.com/go-chi/chi/v5"
+	"github.com/gin-gonic/gin"
 	"github.com/maksonviini/Go-Book-Management-System/pkg/config"
 	"github.com/maksonviini/Go-Book-Management-System/pkg/controllers"
 )
 
-var RegisterBookStoreRoutesfunc = func(router *chi.Mux) {
+var RegisterBookStoreRoutesfunc = func(router *gin.RouterGroup) {
+
 	err := config.Load()
 
 	if err != nil {
 		panic(err)
 	}
 
-	router.Post("/", controllers.Create)
-	router.Get("/", controllers.GetAll)
-	router.Put("/{id}", controllers.Update)
-	router.Delete("/{id}", controllers.Delete)
-	router.Get("/{id}", controllers.Get)
+	router.POST("/", controllers.Create)
+	router.GET("/", controllers.GetAll)
+	router.PUT("/:id", controllers.Update)
+	router.DELETE("/:id", controllers.Delete)
+	router.GET("/:id", controllers.Get)
 
 }
