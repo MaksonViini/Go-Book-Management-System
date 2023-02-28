@@ -9,6 +9,13 @@ import (
 	"strconv"
 )
 
+func Alive(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+	  "message": "pong",
+	})
+}
+
+
 func Create(c *gin.Context) {
 
 	var book models.Book
@@ -40,7 +47,6 @@ func Create(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": resp,
 	  })
-
 }
 
 func Update(c *gin.Context) {

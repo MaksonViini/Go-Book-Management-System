@@ -16,8 +16,8 @@ var RegisterBookStoreRoutesfunc = func(router *gin.RouterGroup) {
 
 	router.POST("/", controllers.Create)
 	router.GET("/", controllers.GetAll)
+	router.GET("/:id", controllers.Get)
+	router.GET("/ping", controllers.Alive)
 	router.PUT("/:id", controllers.Update)
 	router.DELETE("/:id", controllers.Delete)
-	router.GET("/:id", controllers.Get)
-
 }
